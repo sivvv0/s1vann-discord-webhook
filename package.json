@@ -1,0 +1,39 @@
+{
+  "name": "@s1vann/discord-webhook",
+  "version": "0.0.1",
+  "description": "Modern Discord Webhook Framework",
+  "main": "index.js",
+  "type": "commonjs",
+  "private": false,
+  "author": "s1vann <sivandev@tuta.io>",
+  "license": "MIT",
+  "homepage": "https://github.com/sivvv0/@s1vann/discord-webhook#readme",
+  "bugs": {
+    "url": "https://github.com/sivvv0/@s1vann/discord-webhook/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sivvv0/@s1vann/discord-webhook.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "discord",
+    "discord-webhook",
+    "webhook",
+    "discord-api",
+    "embeds",
+    "discord-bot",
+    "discord-framework",
+    "discord-tools"
+  ],
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "form-data": "^4.0.0"
+  }
+}
