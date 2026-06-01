@@ -1,15 +1,15 @@
 {
   "name": "@s1vann/discord-webhook",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Modern Discord Webhook Framework",
   "main": "index.js",
   "type": "commonjs",
   "private": false,
   "author": "s1vann <sivandev@tuta.io>",
   "license": "MIT",
-  "homepage": "https://github.com/sivvv0/discord-webhook#readme",
+  "homepage": "https://github.com/sivvv0/@s1vann/discord-webhook#readme",
   "bugs": {
-    "url": "https://github.com/sivvv0/discord-webhook/issues"
+    "url": "https://github.com/sivvv0/@s1vann/discord-webhook/issues"
   },
   "repository": {
     "type": "git",
