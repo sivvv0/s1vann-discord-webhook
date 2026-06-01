@@ -3,41 +3,14 @@
 <h1>@s1vann/discord-webhook</h1>
 
 <p>
-Modern Discord Webhook Framework for Node.js
+Modern Discord Webhook Framework
 </p>
 
 <p>
-<img src="https://img.shields.io/npm/v/@s1vann/discord-webhook?style=for-the-badge">
-<img src="https://img.shields.io/npm/dt/@s1vann/discord-webhook?style=for-the-badge">
-<img src="https://img.shields.io/github/license/sivvv0/discord-webhook?style=for-the-badge">
-<img src="https://img.shields.io/node/v/@s1vann/discord-webhook?style=for-the-badge">
-</p>
-
-<p>
-Fast • Modern • Powerful • Lightweight
+Fast • Powerful • Modern
 </p>
 
 </div>
-
-<br>
-
-<h2>✨ Features</h2>
-
-<ul>
-<li>⚡ Fast & Lightweight</li>
-<li>🎨 Advanced Embed Builder</li>
-<li>🔘 Buttons Support</li>
-<li>📎 File Uploads</li>
-<li>🗳 Poll Support</li>
-<li>🧠 Queue System</li>
-<li>🔄 Auto Retry</li>
-<li>🧵 Thread Support</li>
-<li>🛡 Rate Limit Protection</li>
-<li>📡 Webhook Manager</li>
-<li>🕒 Scheduler</li>
-<li>🧪 Debug Logs</li>
-<li>🔥 Fluent Builder API</li>
-</ul>
 
 <br>
 
@@ -50,10 +23,12 @@ Fast • Modern • Powerful • Lightweight
 <h2>🚀 Quick Start</h2>
 
 <pre><code class="language-js">
-const Webhook = require('@s1vann/discord-webhook');
+const Webhook = require(
+  '@s1vann/discord-webhook'
+);
 
 const webhook = new Webhook(
-  'YOUR_WEBHOOK_URL'
+  'WEBHOOK_URL'
 );
 
 webhook.send({
@@ -63,26 +38,32 @@ webhook.send({
 
 <br>
 
-<h2>🎨 Embed Example</h2>
+<h2>✨ Features</h2>
+
+<ul>
+<li>🎨 Embed Builder</li>
+<li>🔥 Embed Themes</li>
+<li>📦 Embed Templates</li>
+<li>📨 Multi Message Sender</li>
+<li>🪝 Auto Logger Hooks</li>
+<li>🎤 Voice Upload</li>
+<li>🎥 Video Upload</li>
+<li>📊 Charts & Graphs</li>
+<li>📂 Webhook Collections</li>
+<li>🔘 Buttons</li>
+<li>📎 File Uploads</li>
+</ul>
+
+<br>
+
+<h2>🎨 Embed Themes</h2>
 
 <pre><code class="language-js">
-const Webhook = require(
-  '@s1vann/discord-webhook'
-);
-
-const webhook = new Webhook(
-  'YOUR_WEBHOOK_URL'
-);
-
 const embed = webhook
   .embed()
   .title('Anime')
-  .description('Watching One Piece')
-  .color('#5865F2')
-  .thumbnail(
-    'https://example.com/image.png'
-  )
-  .footer('Powered by s1vann')
+  .description('Episode 1100')
+  .theme('anime')
   .timestamp();
 
 webhook.send({
@@ -92,81 +73,24 @@ webhook.send({
 
 <br>
 
-<h2>🔘 Buttons Example</h2>
+<h2>📦 Embed Templates</h2>
 
 <pre><code class="language-js">
-const buttons = webhook
-  .buttons()
-  .link(
-    'Website',
-    'https://example.com'
-  )
-  .link(
-    'Discord',
-    'https://discord.gg/example'
-  );
-
-webhook.send({
-  content: 'Buttons Example',
-  components: buttons.build()
-});
-</code></pre>
-
-<br>
-
-<h2>📎 File Upload</h2>
-
-<pre><code class="language-js">
-webhook.file(
-  './image.png',
+await webhook.template(
+  'success',
   {
-    content: 'Uploaded File'
+    description:
+      'Everything worked'
   }
 );
 </code></pre>
 
 <br>
 
-<h2>🗳 Poll Example</h2>
+<h2>📨 Multi Message Sender</h2>
 
 <pre><code class="language-js">
-webhook.poll({
-  question: 'Best Anime?',
-  answers: [
-    'One Piece',
-    'Naruto',
-    'Bleach'
-  ]
-});
-</code></pre>
-
-<br>
-
-<h2>✏ Edit Message</h2>
-
-<pre><code class="language-js">
-webhook.edit(
-  'MESSAGE_ID',
-  {
-    content: 'Edited Message'
-  }
-);
-</code></pre>
-
-<br>
-
-<h2>🗑 Delete Message</h2>
-
-<pre><code class="language-js">
-webhook.delete('MESSAGE_ID');
-</code></pre>
-
-<br>
-
-<h2>🧠 Queue System</h2>
-
-<pre><code class="language-js">
-webhook.queue([
+await webhook.bulk([
   {
     content: 'Message 1'
   },
@@ -178,159 +102,102 @@ webhook.queue([
 
 <br>
 
-<h2>🔄 Auto Retry</h2>
+<h2>🪝 Auto Logger Hooks</h2>
 
 <pre><code class="language-js">
 const webhook = new Webhook(
-  'YOUR_WEBHOOK_URL',
+  'WEBHOOK_URL',
   {
-    retry: true,
-    retryLimit: 5
+    autoLogger: true
   }
+);
+
+webhook.hookConsole({
+  log: true,
+  error: true
+});
+
+console.log('Server Started');
+</code></pre>
+
+<br>
+
+<h2>🎤 Voice Upload</h2>
+
+<pre><code class="language-js">
+const webhook = new Webhook(
+  'WEBHOOK_URL',
+  {
+    voice: true
+  }
+);
+
+await webhook.voice(
+  './voice.ogg'
 );
 </code></pre>
 
 <br>
 
-<h2>🕒 Scheduler</h2>
+<h2>🎥 Video Upload</h2>
 
 <pre><code class="language-js">
-webhook.schedule(
-  '10:00 PM',
+const webhook = new Webhook(
+  'WEBHOOK_URL',
   {
-    content: 'Daily Message'
+    video: true
   }
+);
+
+await webhook.video(
+  './video.mp4'
 );
 </code></pre>
 
 <br>
 
-<h2>📡 Webhook Manager</h2>
+<h2>📊 Charts & Graphs</h2>
 
 <pre><code class="language-js">
-const manager = webhook.manager();
-
-manager.add(
-  'logs',
-  'WEBHOOK_URL'
+const webhook = new Webhook(
+  'WEBHOOK_URL',
+  {
+    charts: true
+  }
 );
 
-manager.send('logs', {
-  content: 'Server Started'
+await webhook.chart({
+
+  title: 'Weekly Stats',
+
+  labels: [
+    'Mon',
+    'Tue',
+    'Wed'
+  ],
+
+  data: [
+    10,
+    20,
+    30
+  ]
+
 });
 </code></pre>
 
 <br>
 
-<h2>🔥 Fluent Builder API</h2>
+<h2>📂 Webhook Collections</h2>
 
 <pre><code class="language-js">
-webhook
-  .message()
-  .content('Watching Anime')
-  .embed(
-    webhook
-      .embed()
-      .title('One Piece')
-      .description('Episode 1100')
-  )
-  .button(
-    'Watch',
-    'https://example.com'
-  )
-  .send();
+const logs =
+  webhook.collection('logs');
+
+logs.send({
+  content:
+    'Server Started'
+});
 </code></pre>
-
-<br>
-
-<h2>🧪 Debug Mode</h2>
-
-<pre><code class="language-js">
-const webhook = new Webhook(
-  'YOUR_WEBHOOK_URL',
-  {
-    debug: true
-  }
-);
-</code></pre>
-
-<br>
-
-<h2>⚙ Options</h2>
-
-<table>
-<tr>
-<th>Option</th>
-<th>Type</th>
-<th>Default</th>
-</tr>
-
-<tr>
-<td>retry</td>
-<td>boolean</td>
-<td>true</td>
-</tr>
-
-<tr>
-<td>retryLimit</td>
-<td>number</td>
-<td>5</td>
-</tr>
-
-<tr>
-<td>debug</td>
-<td>boolean</td>
-<td>false</td>
-</tr>
-
-<tr>
-<td>queue</td>
-<td>boolean</td>
-<td>true</td>
-</tr>
-</table>
-
-<br>
-
-<h2>📋 Requirements</h2>
-
-<ul>
-<li>Node.js 18+</li>
-<li>Discord Webhook URL</li>
-</ul>
-
-<br>
-
-<h2>💡 Example Logger</h2>
-
-<pre><code class="language-js">
-const Webhook = require(
-  '@s1vann/discord-webhook'
-);
-
-const logs = new Webhook(
-  'YOUR_WEBHOOK_URL'
-);
-
-console.log = async (...args) => {
-  await logs.send({
-    content: args.join(' ')
-  });
-};
-</code></pre>
-
-<br>
-
-<div align="center">
-
-<h2>⭐ Support</h2>
-
-<p>
-If you like this project,
-consider giving it a star on GitHub.
-</p>
-
-</div>
 
 <br>
 
