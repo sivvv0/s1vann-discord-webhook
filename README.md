@@ -274,6 +274,7 @@ await webhook.bulk([
 <h2>
 🪝 Auto Logger Hooks
 </h2>
+
 ```js
 const webhook = new Webhook(
   'YOUR_WEBHOOK_URL',
@@ -298,3 +299,227 @@ console.error(
   'Database Error'
 );
 ```
+<br>
+<h2>
+🎤 Voice Message Upload
+</h2>
+
+```js
+const webhook = new Webhook(
+  'YOUR_WEBHOOK_URL',
+  {
+    voice: true
+  }
+);
+
+await webhook.voice(
+  './voice.ogg',
+  {
+    content: 'Voice Message'
+  }
+);
+```
+<br>
+<h2>
+🎥 Video Upload
+</h2>
+
+```js
+const webhook = new Webhook(
+  'YOUR_WEBHOOK_URL',
+  {
+    video: true
+  }
+);
+
+await webhook.video(
+  './video.mp4',
+  {
+    content: 'Video Upload'
+  }
+);
+```
+<br>
+<h2>
+📊 Charts & Graphs
+</h2>
+
+```js
+const webhook = new Webhook(
+  'YOUR_WEBHOOK_URL',
+  {
+    charts: true
+  }
+);
+
+await webhook.chart({
+
+  title: 'Weekly Stats',
+
+  labels: [
+    'Mon',
+    'Tue',
+    'Wed'
+  ],
+
+  data: [
+    10,
+    25,
+    40
+  ]
+
+});
+```
+<br>
+<h2>
+📂 Webhook Collections
+</h2>
+
+```js
+const logs =
+  webhook.collection('logs');
+
+logs.send({
+  content:
+    'Server Started'
+});
+```
+<br>
+<h2>
+🔘 Buttons
+</h2>
+
+```js
+const buttons = webhook
+  .buttons()
+  .link(
+    'Website',
+    'https://example.com'
+  )
+  .link(
+    'Discord',
+    'https://discord.gg/example'
+  );
+
+webhook.send({
+
+  content: 'Links',
+
+  components:
+    buttons.build()
+
+});
+```
+<br>
+<h2>
+📎 File Uploads
+</h2>
+
+```js
+await webhook.file(
+  './image.png',
+  {
+    content:
+      'Uploaded Image'
+  }
+);
+```
+<br>
+<h2 id="options">
+⚙ Options
+</h2>
+<table>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+<tr>
+<td>retry</td>
+<td>boolean</td>
+<td>true</td>
+</tr>
+<tr>
+<td>retryLimit</td>
+<td>number</td>
+<td>5</td>
+</tr>
+<tr>
+<td>debug</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>autoLogger</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>voice</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>video</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>charts</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+</table>
+<br>
+<h2>
+🧪 Debug Mode
+</h2>
+
+```js
+const webhook = new Webhook(
+  'YOUR_WEBHOOK_URL',
+  {
+    debug: true
+  }
+);
+```
+<br>
+<h2>
+📋 Requirements
+</h2>
+<ul>
+<li>Node.js 18+</li>
+<li>Discord Webhook URL</li>
+</ul>
+<br>
+<h2>
+📦 Package Information
+</h2>
+<table>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+<tr>
+<td>Package</td>
+<td>@s1vann/discord-webhook</td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td>Node.js</td>
+</tr>
+<tr>
+<td>Module Type</td>
+<td>CommonJS</td>
+</tr>
+<tr>
+<td>License</td>
+<td>MIT</td>
+</tr>
+</table>
+<br>
+<h2>
+🔥 Advanced Example
+</h2>
+
+
