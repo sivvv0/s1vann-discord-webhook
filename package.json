@@ -24,9 +24,10 @@
     "webhook",
     "discord-api",
     "embeds",
-    "discord-bot",
+    "logger",
     "discord-framework",
-    "discord-tools"
+    "charts",
+    "voice-upload"
   ],
   "scripts": {
     "start": "node index.js",
