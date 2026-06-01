@@ -5,6 +5,7 @@ const FormData = require('form-data');
 const fs = require('fs');
 
 class EmbedBuilder {
+
   constructor() {
     this.embed = {};
   }
@@ -20,44 +21,69 @@ class EmbedBuilder {
   }
 
   color(color) {
+
     this.embed.color =
       typeof color === 'string'
-        ? parseInt(color.replace('#', ''), 16)
+        ? parseInt(
+            color.replace('#', ''),
+            16
+          )
         : color;
 
     return this;
   }
 
-  url(url) {
-    this.embed.url = url;
+  theme(name) {
+
+    const themes = {
+
+      anime: '#FF66C4',
+      cyberpunk: '#00F5FF',
+      minimal: '#FFFFFF',
+      discord: '#5865F2'
+
+    };
+
+    if (themes[name]) {
+      this.color(themes[name]);
+    }
+
     return this;
   }
 
-  author(name, icon_url = null) {
-    this.embed.author = { name, icon_url };
-    return this;
-  }
+  footer(text) {
 
-  thumbnail(url) {
-    this.embed.thumbnail = { url };
-    return this;
-  }
-
-  image(url) {
-    this.embed.image = { url };
-    return this;
-  }
-
-  footer(text, icon_url = null) {
     this.embed.footer = {
-      text,
-      icon_url
+      text
     };
 
     return this;
   }
 
-  field(name, value, inline = false) {
+  thumbnail(url) {
+
+    this.embed.thumbnail = {
+      url
+    };
+
+    return this;
+  }
+
+  image(url) {
+
+    this.embed.image = {
+      url
+    };
+
+    return this;
+  }
+
+  field(
+    name,
+    value,
+    inline = false
+  ) {
+
     if (!this.embed.fields) {
       this.embed.fields = [];
     }
@@ -71,22 +97,28 @@ class EmbedBuilder {
     return this;
   }
 
-  timestamp(date = new Date()) {
-    this.embed.timestamp = date.toISOString();
+  timestamp() {
+
+    this.embed.timestamp =
+      new Date().toISOString();
+
     return this;
   }
 
   build() {
     return this.embed;
   }
+
 }
 
 class ButtonBuilder {
+
   constructor() {
     this.components = [];
   }
 
   link(label, url) {
+
     this.components.push({
       type: 2,
       style: 5,
@@ -98,122 +130,55 @@ class ButtonBuilder {
   }
 
   build() {
+
     return [
       {
         type: 1,
         components: this.components
       }
     ];
-  }
-}
 
-class MessageBuilder {
-  constructor(webhook) {
-    this.webhook = webhook;
-    this.payload = {};
   }
 
-  content(text) {
-    this.payload.content = text;
-    return this;
-  }
-
-  username(name) {
-    this.payload.username = name;
-    return this;
-  }
-
-  avatar(url) {
-    this.payload.avatar_url = url;
-    return this;
-  }
-
-  embed(embed) {
-    if (!this.payload.embeds) {
-      this.payload.embeds = [];
-    }
-
-    this.payload.embeds.push(
-      embed.build ? embed.build() : embed
-    );
-
-    return this;
-  }
-
-  button(label, url) {
-    const row = new ButtonBuilder()
-      .link(label, url)
-      .build();
-
-    this.payload.components = row;
-
-    return this;
-  }
-
-  async send() {
-    return this.webhook.send(this.payload);
-  }
-}
-
-class WebhookManager {
-  constructor(parent) {
-    this.parent = parent;
-    this.webhooks = new Map();
-  }
-
-  add(name, url) {
-    this.webhooks.set(
-      name,
-      new DiscordWebhook(url)
-    );
-
-    return this;
-  }
-
-  get(name) {
-    return this.webhooks.get(name);
-  }
-
-  async send(name, payload) {
-    const hook = this.get(name);
-
-    if (!hook) {
-      throw new Error(
-        `Webhook "${name}" not found`
-      );
-    }
-
-    return hook.send(payload);
-  }
 }
 
 class DiscordWebhook {
-  constructor(url, options = {}) {
-    if (!url) {
-      throw new Error('Webhook URL is required');
-    }
+
+  constructor(
+    url,
+    options = {}
+  ) {
 
     this.url = url;
 
     this.options = {
+
       retry: true,
       retryLimit: 5,
       debug: false,
-      queue: true,
+      autoLogger: false,
+      voice: false,
+      video: false,
+      charts: false,
+
       ...options
+
     };
 
-    this.queueItems = [];
-    this.processing = false;
+    this.collections =
+      new Map();
+
   }
 
   log(...args) {
+
     if (this.options.debug) {
       console.log(
-        '[DiscordWebhook]',
+        '[Webhook]',
         ...args
       );
     }
+
   }
 
   embed() {
@@ -224,249 +189,320 @@ class DiscordWebhook {
     return new ButtonBuilder();
   }
 
-  message() {
-    return new MessageBuilder(this);
-  }
-
-  manager() {
-    return new WebhookManager(this);
-  }
-
-  async request(payload, files = null) {
-    try {
-      if (files) {
-        const form = new FormData();
-
-        form.append(
-          'payload_json',
-          JSON.stringify(payload)
-        );
-
-        files.forEach((file, index) => {
-          form.append(
-            `files[${index}]`,
-            fs.createReadStream(file)
-          );
-        });
-
-        return axios.post(
-          this.url,
-          form,
-          {
-            headers: form.getHeaders()
-          }
-        );
-      }
-
-      return axios.post(
-        this.url,
-        payload
-      );
-
-    } catch (err) {
-      this.log(err.message);
-
-      if (this.options.retry) {
-        return this.retry(payload, files);
-      }
-
-      throw err;
-    }
-  }
-
-  async retry(payload, files) {
-    for (
-      let i = 0;
-      i < this.options.retryLimit;
-      i++
-    ) {
-      try {
-        this.log(
-          `Retry ${i + 1}`
-        );
-
-        return await this.request(
-          payload,
-          files
-        );
-
-      } catch (err) {
-        if (
-          i ===
-          this.options.retryLimit - 1
-        ) {
-          throw err;
-        }
-      }
-    }
-  }
-
   async send(payload) {
-    this.log('Sending message');
 
-    return this.request(payload);
-  }
+    this.log('Sending');
 
-  async file(path, payload = {}) {
-    return this.request(
-      payload,
-      [path]
-    );
-  }
-
-  async files(paths, payload = {}) {
-    return this.request(
-      payload,
-      paths
-    );
-  }
-
-  async poll(data) {
-    return this.send({
-      poll: {
-        question: {
-          text: data.question
-        },
-
-        answers: data.answers.map(
-          answer => ({
-            poll_media: {
-              text: answer
-            }
-          })
-        ),
-
-        duration: data.duration || 24
-      }
-    });
-  }
-
-  async edit(messageId, payload) {
-    return axios.patch(
-      `${this.url}/messages/${messageId}`,
+    return axios.post(
+      this.url,
       payload
     );
+
   }
 
-  async delete(messageId) {
-    return axios.delete(
-      `${this.url}/messages/${messageId}`
+  async file(
+    path,
+    payload = {}
+  ) {
+
+    const form = new FormData();
+
+    form.append(
+      'payload_json',
+      JSON.stringify(payload)
     );
-  }
 
-  async success(text) {
-    return this.send({
-      embeds: [
-        this.embed()
-          .title('Success')
-          .description(text)
-          .color('#57F287')
-          .timestamp()
-          .build()
-      ]
-    });
-  }
+    form.append(
+      'file',
+      fs.createReadStream(path)
+    );
 
-  async error(text) {
-    return this.send({
-      embeds: [
-        this.embed()
-          .title('Error')
-          .description(text)
-          .color('#ED4245')
-          .timestamp()
-          .build()
-      ]
-    });
-  }
-
-  async warning(text) {
-    return this.send({
-      embeds: [
-        this.embed()
-          .title('Warning')
-          .description(text)
-          .color('#FEE75C')
-          .timestamp()
-          .build()
-      ]
-    });
-  }
-
-  queue(messages = []) {
-    this.queueItems.push(...messages);
-
-    if (!this.processing) {
-      this.processQueue();
-    }
-  }
-
-  async processQueue() {
-    this.processing = true;
-
-    while (
-      this.queueItems.length > 0
-    ) {
-      const message =
-        this.queueItems.shift();
-
-      try {
-        await this.send(message);
-
-        await new Promise(resolve =>
-          setTimeout(resolve, 1000)
-        );
-
-      } catch (err) {
-        console.error(err);
+    return axios.post(
+      this.url,
+      form,
+      {
+        headers:
+          form.getHeaders()
       }
-    }
+    );
 
-    this.processing = false;
   }
 
-  schedule(time, payload) {
-    const now = new Date();
+  async voice(
+    path,
+    payload = {}
+  ) {
 
-    const [hour, minute] =
-      time.split(':');
+    if (!this.options.voice) {
 
-    const target = new Date();
+      throw new Error(
+        'Voice uploads disabled'
+      );
 
-    target.setHours(hour);
-    target.setMinutes(minute);
-    target.setSeconds(0);
-
-    let delay =
-      target.getTime() -
-      now.getTime();
-
-    if (delay < 0) {
-      delay += 86400000;
     }
 
-    setTimeout(() => {
-      this.send(payload);
-    }, delay);
+    return this.file(
+      path,
+      payload
+    );
+
   }
 
-  template(type, text) {
-    switch (type) {
-      case 'success':
-        return this.success(text);
+  async video(
+    path,
+    payload = {}
+  ) {
 
-      case 'error':
-        return this.error(text);
+    if (!this.options.video) {
 
-      case 'warning':
-        return this.warning(text);
+      throw new Error(
+        'Video uploads disabled'
+      );
 
-      default:
-        throw new Error(
-          'Unknown template'
-        );
     }
+
+    return this.file(
+      path,
+      payload
+    );
+
   }
+
+  async bulk(messages = []) {
+
+    return Promise.all(
+      messages.map(msg =>
+        this.send(msg)
+      )
+    );
+
+  }
+
+  collection(name) {
+
+    if (
+      !this.collections.has(name)
+    ) {
+
+      this.collections.set(
+        name,
+        new DiscordWebhook(
+          this.url,
+          this.options
+        )
+      );
+
+    }
+
+    return this.collections.get(
+      name
+    );
+
+  }
+
+  async chart(data) {
+
+    if (!this.options.charts) {
+
+      throw new Error(
+        'Charts disabled'
+      );
+
+    }
+
+    return this.send({
+
+      embeds: [
+
+        this
+          .embed()
+          .title(data.title)
+          .description(
+            `
+Labels:
+${data.labels.join(', ')}
+
+Data:
+${data.data.join(', ')}
+            `
+          )
+          .theme('discord')
+          .timestamp()
+          .build()
+
+      ]
+
+    });
+
+  }
+
+  hookConsole(
+    options = {}
+  ) {
+
+    const settings = {
+
+      log: true,
+      error: true,
+      warn: true,
+
+      ...options
+
+    };
+
+    if (settings.log) {
+
+      const oldLog =
+        console.log;
+
+      console.log = async (
+        ...args
+      ) => {
+
+        oldLog(...args);
+
+        await this.send({
+
+          embeds: [
+
+            this
+              .embed()
+              .title(
+                'Console Log'
+              )
+              .description(
+                args.join(' ')
+              )
+              .theme(
+                'discord'
+              )
+              .timestamp()
+              .build()
+
+          ]
+
+        });
+
+      };
+
+    }
+
+    if (settings.error) {
+
+      const oldError =
+        console.error;
+
+      console.error = async (
+        ...args
+      ) => {
+
+        oldError(...args);
+
+        await this.send({
+
+          embeds: [
+
+            this
+              .embed()
+              .title(
+                'Console Error'
+              )
+              .description(
+                args.join(' ')
+              )
+              .theme('anime')
+              .timestamp()
+              .build()
+
+          ]
+
+        });
+
+      };
+
+    }
+
+  }
+
+  async template(
+    type,
+    data = {}
+  ) {
+
+    const templates = {
+
+      success: () => ({
+        embeds: [
+
+          this
+            .embed()
+            .title('Success')
+            .description(
+              data.description ||
+              'Success'
+            )
+            .color('#57F287')
+            .timestamp()
+            .build()
+
+        ]
+      }),
+
+      error: () => ({
+        embeds: [
+
+          this
+            .embed()
+            .title('Error')
+            .description(
+              data.description ||
+              'Error'
+            )
+            .color('#ED4245')
+            .timestamp()
+            .build()
+
+        ]
+      }),
+
+      anime: () => ({
+        embeds: [
+
+          this
+            .embed()
+            .title(
+              data.anime ||
+              'Anime'
+            )
+            .description(
+              `Episode ${
+                data.episode || '1'
+              }`
+            )
+            .theme('anime')
+            .timestamp()
+            .build()
+
+        ]
+      })
+
+    };
+
+    if (!templates[type]) {
+
+      throw new Error(
+        'Unknown template'
+      );
+
+    }
+
+    return this.send(
+      templates[type]()
+    );
+
+  }
+
 }
 
-module.exports = DiscordWebhook;
+module.exports =
+  DiscordWebhook;
