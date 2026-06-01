@@ -522,4 +522,61 @@ const webhook = new Webhook(
 🔥 Advanced Example
 </h2>
 
+```js
+const Webhook = require(
+  '@s1vann/discord-webhook'
+);
+
+const webhook = new Webhook(
+  'YOUR_WEBHOOK_URL',
+  {
+    autoLogger: true,
+    charts: true,
+    voice: true,
+    video: true,
+    debug: true
+  }
+);
+
+webhook.hookConsole();
+
+const embed = webhook
+  .embed()
+  .title('Advanced Example')
+  .description(
+    'Modern Webhook Framework'
+  )
+  .theme('discord')
+  .timestamp();
+
+webhook.send({
+  embeds: [embed.build()]
+});
+```
+<br>
+<div align="center">
+
+<h2>
+❤️ Support
+</h2>
+<p>
+If you enjoy this project:
+</p>
+<p>
+⭐ Star the repository
+📦 Share the package
+🚀 Use it in your projects
+</p>
+</div>
+<br>
+<div align="center">
+<h2>
+Made with ❤️ by @s1vann
+</h2>
+<p>
+Modern Discord Tools for Developers
+</p>
+</div>
+
+
 
