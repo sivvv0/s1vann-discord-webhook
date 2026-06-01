@@ -55,9 +55,11 @@ Install using npm:
 ```js
 npm install @s1vann/discord-webhook
 ```
+
 <p>
 or using yarn:
 </p>
+
 ```js
 yarn add @s1vann/discord-webhook
 ```
@@ -65,6 +67,7 @@ yarn add @s1vann/discord-webhook
 <h2 id="quick-start">
 🚀 Quick Start
 </h2>
+
 ```js
 const Webhook = require(
   '@s1vann/discord-webhook'
@@ -78,6 +81,7 @@ webhook.send({
   content: 'Hello World 🚀'
 });
 ```
+
 <br>
 <h2 id="features">
 ✨ Features
