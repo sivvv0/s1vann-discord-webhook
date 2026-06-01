@@ -141,3 +141,160 @@ webhook.send({
 </tr>
 </table>
 <br>
+<h2 id="examples">
+📁 Basic Example
+</h2>
+
+```js
+const Webhook = require(
+  '@s1vann/discord-webhook'
+);
+
+const webhook = new Webhook(
+  'YOUR_WEBHOOK_URL'
+);
+
+const embed = webhook
+  .embed()
+  .title('Server Started')
+  .description(
+    'Everything is running perfectly'
+  )
+  .theme('discord')
+  .timestamp();
+
+webhook.send({
+  embeds: [embed.build()]
+});
+```
+<br>
+<h2>
+🎨 Embed Builder
+</h2>ml
+
+```js
+const embed = webhook
+  .embed()
+  .title('Anime Update')
+  .description(
+    'One Piece Episode 1100'
+  )
+  .field(
+    'Status',
+    'Released',
+    true
+  )
+  .thumbnail(
+    'https://example.com/image.png'
+  )
+  .theme('anime')
+  .timestamp();
+
+webhook.send({
+  embeds: [embed.build()]
+});
+```
+<br>
+<h2>
+🌈 Embed Themes
+</h2>
+<p>
+Built-in themes:
+</p>
+<ul>
+<li>anime</li>
+<li>discord</li>
+<li>cyberpunk</li>
+<li>minimal</li>
+</ul>
+
+```js
+webhook
+  .embed()
+  .title('Cyberpunk Theme')
+  .theme('cyberpunk');
+```
+<br>
+<h2>
+📦 Embed Templates
+</h2>
+<p>
+ Template:
+</p>
+
+```js
+await webhook.template(
+  'success',
+  {
+    description:
+      'Database Connected'
+  }
+);
+
+// Error Template
+await webhook.template(
+  'error',
+  {
+    description:
+      'Server Crashed'
+  }
+);
+// Anime Template
+await webhook.template(
+  'anime',
+  {
+    anime: 'One Piece',
+    episode: '1100'
+  }
+);
+```
+<br>
+<h2>
+📨 Multi Message Sender
+</h2>
+
+```js
+await webhook.bulk([
+
+  {
+    content: 'Message 1'
+  },
+
+  {
+    content: 'Message 2'
+  },
+
+  {
+    content: 'Message 3'
+  }
+
+]);
+```
+<br>
+<h2>
+🪝 Auto Logger Hooks
+</h2>
+```js
+const webhook = new Webhook(
+  'YOUR_WEBHOOK_URL',
+  {
+    autoLogger: true
+  }
+);
+
+webhook.hookConsole({
+
+  log: true,
+  error: true,
+  warn: true
+
+});
+
+console.log(
+  'Server Started'
+);
+
+console.error(
+  'Database Error'
+);
+```
