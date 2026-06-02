@@ -7,13 +7,13 @@
   "private": false,
   "author": "s1vann <sivandev@tuta.io>",
   "license": "MIT",
-  "homepage": "https://github.com/sivvv0/@s1vann/discord-webhook#readme",
+  "homepage": "https://github.com/sivvv0/s1vann-discord-webhook#readme",
   "bugs": {
-    "url": "https://github.com/sivvv0/@s1vann/discord-webhook/issues"
+    "url": "https://github.com/sivvv0/s1vann-discord-webhook/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sivvv0/discord-webhook.git"
+    "url": "https://github.com/sivvv0/s1vann-discord-webhook.git"
   },
   "engines": {
     "node": ">=18"
