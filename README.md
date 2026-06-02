@@ -16,11 +16,9 @@ Create powerful Discord webhook systems with embeds, themes, logging, uploads, c
 
 <img src="https://img.shields.io/npm/v/@s1vann/discord-webhook?style=for-the-badge">
 
-<img src="https://img.shields.io/npm/dt/@s1vann/discord-webhook?style=for-the-badge">
 
 <img src="https://img.shields.io/node/v/@s1vann/discord-webhook?style=for-the-badge">
 
-<img src="https://img.shields.io/github/license/sivvv0/discord-webhook?style=for-the-badge">
 
 </p>
 
